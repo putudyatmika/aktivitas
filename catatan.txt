@@ -1,0 +1,4 @@
+//tabel m_kamus
+semua redaksi kegiatan oleh pegawai dari tabel aktivitas masuk ke tabel m_kamus
+begitu sebaliknya. jadi di m_kamus bisa saja judul sama redaksi berada
+pada unitkerja yg berbeda
