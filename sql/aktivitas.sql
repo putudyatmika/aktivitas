@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2018 at 11:42 AM
+-- Generation Time: May 14, 2018 at 10:17 AM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 7.2.2
 
@@ -158,11 +158,10 @@ CREATE TABLE `m_peg` (
   `nip_lama` varchar(9) DEFAULT NULL,
   `nip_baru` varchar(18) DEFAULT NULL,
   `jk` tinyint(1) UNSIGNED DEFAULT NULL,
-  `jabatan` int(1) UNSIGNED DEFAULT NULL,
   `pangkat` int(2) UNSIGNED DEFAULT NULL,
   `tgl_add` datetime DEFAULT NULL,
   `add_oleh` int(8) UNSIGNED DEFAULT NULL,
-  `tgl_update` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `tgl_update` datetime DEFAULT NULL,
   `update_oleh` int(8) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -291,12 +290,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `passwd`, `nama`, `email`, `unitkerja`, `nohp`, `peg_status`, `peg_jabatan`, `tgl_add`, `add_oleh`, `tgl_update`, `update_oleh`, `ip_lastlogin`, `tgl_lastlogin`, `level`, `aktif`) VALUES
-(1, 'mika', 'c153f0a492b91e16adc06e38206b2ccb', 'I Putu Dyatmika', 'dyatmika@bps.go.id', '52563', '081237802900', 1, 1, '2018-04-30 15:28:13', 1, '2018-05-04 15:47:36', 1, '10.52.6.31', '2018-05-04 17:22:14', 3, 1),
-(4, 'cassli', 'c0c2be89659678fffe142b9475a32d81', 'Casslirais Surawan', 'casslirais@bps.go.id', '52562', '081804096469', 1, 2, '2018-05-04 08:08:03', 1, '2018-05-04 16:01:58', 6, NULL, NULL, 1, 1),
-(6, 'yudi', '0606800729d61eb20e85a5404dae13fc', 'Wahyudi Septiawan', 'wahyudi.septiawan@bps.go.id', '52563', NULL, 1, 2, '2018-05-04 08:15:30', 1, '2018-05-04 15:59:49', 6, '10.52.6.31', '2018-05-04 15:55:19', 2, 1),
-(7, 'agus', '9ae32e09273b3f572c0bd4a88e21e2fd', 'Agus Sudibyo', 'agus_sudibyo@bps.go.id', '52560', '08180000', 1, 1, '2018-05-04 16:07:56', 1, NULL, 1, '10.52.6.31', '2018-05-04 16:10:19', 2, 1),
-(8, 'lukman', 'd2a1b65dc026e1b3c7d42796f159cb83', 'Lukman', 'lukman@bps.go.id', '52561', '977878', 1, 1, '2018-05-04 16:13:59', 1, NULL, NULL, NULL, NULL, 1, 1),
-(10, 'indradewi', 'aef5746046a8de0cf0c8eb91190fbe51', 'Gusti Ketut Indradewi', 'indradewi@bps.go.id', '52521', '081237105869', 1, 4, '2018-05-04 16:16:46', 1, '2018-05-04 16:16:56', 1, NULL, NULL, 1, 0);
+(1, 'mika', 'c153f0a492b91e16adc06e38206b2ccb', 'I Putu Dyatmika', 'dyatmika@bps.go.id', '52563', '081237802900', 1, 1, '2018-04-30 15:28:13', 1, '2018-05-04 15:47:36', 1, '10.52.6.31', '2018-05-14 15:02:16', 3, 1),
+(6, 'yudi', '0606800729d61eb20e85a5404dae13fc', 'Wahyudi Septiawan', 'wahyudi.septiawan@bps.go.id', '52563', '08180415', 1, 2, '2018-05-04 08:15:30', 1, '2018-05-07 11:29:50', 1, '10.52.6.31', '2018-05-04 15:55:19', 2, 1),
+(7, 'agus', '9ae32e09273b3f572c0bd4a88e21e2fd', 'Agus Sudibyo', 'agus_sudibyo@bps.go.id', '52560', '08180000897', 1, 1, '2018-05-04 16:07:56', 1, '2018-05-07 11:29:40', 1, '10.52.6.31', '2018-05-04 16:10:19', 2, 1),
+(8, 'yudis', '99c1b3ffcff7097facf1f17eb76405af', 'I Putu Yudhistira', 'dhisty@yahoo.com', '52563', '0819878237', 1, 2, '2018-05-14 15:00:47', 1, NULL, NULL, '10.52.6.31', '2018-05-14 15:01:51', 1, 1),
+(9, 'andre', '66a0d3956fa2a4884b71cdefaf3ba2c0', 'Lalu Andre Lukito', 'andre.lukito@gmail.com', '52514', '087238', 2, 3, '2018-05-14 15:44:52', 1, NULL, NULL, NULL, NULL, 1, 1);
 
 --
 -- Indexes for dumped tables
@@ -402,7 +400,7 @@ ALTER TABLE `unitkerja`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

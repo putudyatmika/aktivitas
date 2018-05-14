@@ -197,12 +197,12 @@ function hapus_username($user_id) {
 		$sql_hapus_user = $conn_users -> query("delete from users where id='$user_id'") or die(mysqli_error($conn_users));
 
 		if ($sql_hapus_user) {
-			//berhasil di update
+			//berhasil di hapus
 			$r_update["error"]=false;
-			$r_update["pesan_error"]='<div class="alert alert-success"><strong>(SUCCESS)</strong> : Username <strong>('.$r->username.') '.$r->nama.'</strong> berhasil untuk melakukan update</div>';
+			$r_update["pesan_error"]='<div class="alert alert-success"><strong>(SUCCESS)</strong> : Username <strong>('.$r->username.') '.$r->nama.'</strong> berhasil dihapus</div>';
 		}
 		else {
-			//error di update
+			//error di hapus
 			$r_update["error"]=true;
 			$r_update["pesan_error"]='<div class="alert alert-danger"><strong>(ERROR)</strong : Username <strong>('.$r->username.') '.$r->nama.'</strong>  Gagal untuk dihapus</div>';
 		}
