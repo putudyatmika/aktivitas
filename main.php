@@ -97,6 +97,15 @@
                         </li>
                     </ul>
                 </li>
+                <li <?php if ($page=='dataharilibur') { echo $link_aktif; } ?>>
+                <a href="<?php echo $url; ?>/dataharilibur/"><i class="fa fa-asterisk"></i> <span class="nav-label">Master Hari Libur</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                        <li><a href="<?php echo $url; ?>/dataharilibur/add/">Tambah Data</a></li>
+                        <li><a href="<?php echo $url; ?>/dataharilibur/">List</a></li>
+                        </li>
+                    </ul>
+                </li>
             </ul>
 
         </div>

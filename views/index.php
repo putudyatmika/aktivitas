@@ -11,6 +11,9 @@ elseif ($page=="edit") {
 elseif ($page=="dataunitkerja") {
         include 'views/unitkerja/m_unitkerja.php';
     }
+elseif ($page=="dataharilibur") {
+        include 'views/harilibur/m_harilibur.php';
+    }
 elseif ($page=="datakamus") {
     include 'views/kamus/m_kamus.php';
 }

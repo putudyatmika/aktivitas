@@ -156,4 +156,39 @@ function cek_hari_libur($tgl_hari) {
 	return $data_libur;
 	$conn_hari -> close();
 }
+function list_hari_libur($tgl_hari,$tgl_tahun,$detil=false){
+	$db_hari = new db();
+	$conn_hari = $db_hari -> connect();
+	if ($detil==false) {
+		//semua hari libur dalam tahun yg terisi
+		$sql_hari = $conn_hari -> query("select * from hari_libur where year(tanggal)='$tgl_tahun' order by tanggal asc") or die(mysqli_error($conn_hari));
+	}
+	else {
+		//cek hari libur menurut tgl_hari
+		$sql_hari = $conn_hari -> query("select * from hari_libur where tanggal='$tgl_hari'");
+	}
+	
+	$cek_hari = $sql_hari -> num_rows;
+	$data_libur=array("error"=>false);
+	if ($cek_hari>0) {
+		$data_libur["error"]=false;
+		$data_libur["total_hari"]=$cek_hari;
+		$i=1;
+		while ($r=$sql_hari->fetch_object()) {
+			$data_libur["item"][$i]=array(
+				"tgl_id"=>$r->id,
+				"tgl_hari"=>$r->tanggal,
+				"tgl_ket"=>$r->ket,
+				"tgl_status"=>$r->status
+			);
+			$i++;
+		}
+	}
+	else {
+		$data_libur["error"]=true;
+		$data_libur["pesan_error"]='Data hari libur tidak ada';
+	}
+	return $data_libur;
+	$conn_hari -> close();
+}
 ?>
