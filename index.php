@@ -67,17 +67,17 @@ echo '
 	<br />
 	';
 
-echo $_SESSION['papo_username'] .'<br />'.
-$_SESSION['papo_userid'] .'<br />'.
-$_SESSION['papo_passwd_md5'] .'<br />'.
-$_SESSION['papo_passwd_ori'] .'<br />'.
-$_SESSION['papo_nama'].'<br />',
-$_SESSION['papo_level'].'<br />',
-$_SESSION['papo_unitkerja'].'<br />',
-$_SESSION['papo_unitnama'].'<br />',
-$_SESSION['papo_email'].'<br />',
-$_SESSION['papo_status'].'<br />',
-$_SESSION['papo_jabatan'].'<br />';
+echo 'papo_username : '. $_SESSION['papo_username'] .'<br />'.
+'papo_userid : '.$_SESSION['papo_userid'] .'<br />'.
+'papo_passwd_md5 : '.$_SESSION['papo_passwd_md5'] .'<br />'.
+'papo_passwd_ori : '.$_SESSION['papo_passwd_ori'] .'<br />'.
+'papo_nama : '.$_SESSION['papo_nama'].'<br />',
+'papo_level : '.$_SESSION['papo_level'].'<br />',
+'papo_unitkerja : '.$_SESSION['papo_unitkerja'].'<br />',
+'papo_unitnama : '.$_SESSION['papo_unitnama'].'<br />',
+'papo_email : '.$_SESSION['papo_email'].'<br />',
+'papo_status : '.$_SESSION['papo_status'].'<br />',
+'papo_jabatan : '.$_SESSION['papo_jabatan'].'<br />';
 echo '<br />';
 echo 'URL asli : '.$_SERVER["REQUEST_URI"];
 echo '<br />Url DB : '.$url_db[2].'<br />URL server : '.$_SERVER['HTTP_HOST'];
