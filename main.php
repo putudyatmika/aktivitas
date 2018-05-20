@@ -68,8 +68,8 @@
                 <li <?php if ($page=='harian') { echo $link_aktif; } ?>>
                     <a href="<?php echo $url; ?>/harian/"><i class="fa fa-cubes"></i> <span class="nav-label">Rekap Harian</span></a>
                 </li>
-                 <li <?php if ($page=='pegawai') { echo $link_aktif; } ?>>
-                    <a href="<?php echo $url; ?>/pegawai/"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Rekap Pegawai</span></a>
+                 <li <?php if ($page=='rekappegawai') { echo $link_aktif; } ?>>
+                    <a href="<?php echo $url; ?>/rekappegawai/"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Rekap Pegawai</span></a>
                 </li>
                 <li <?php if ($page=='datakamus') { echo $link_aktif; } ?>>
                 <a href="<?php echo $url; ?>/datakamus/"><i class="fa fa-asterisk"></i> <span class="nav-label">Master Aktivitas</span></a>
@@ -255,6 +255,31 @@
                     {extend: 'csv'},
                     {extend: 'excel', title: 'ExampleFile'},
                     {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+        $(document).ready(function(){
+            $('.TabelAktivitasHarian').DataTable({
+                pageLength: 50,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'excel', title: 'Aktivitas Harian'},
+                    {extend: 'pdf', title: 'Aktivitas Harian'},
 
                     {extend: 'print',
                      customize: function (win){

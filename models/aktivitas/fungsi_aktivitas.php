@@ -38,7 +38,7 @@ function save_m_kamus($aktif_judul,$aktif_unitkerja,$user_id,$aktif_status) {
 	$waktu_lokal=date("Y-m-d H:i:s");
 	$db_aktif = new db();
 	$conn_aktif = $db_aktif -> connect();
-	$sql_simpan_red=$conn_aktif->query("insert into m_kamus(redaksi,unit_kode,user_id,tgl_add,update_oleh,flag) values('$aktif_judul','$aktif_unitkerja','$user_id','$waktu_lokal','$user_id','$aktif_status')") or die(mysqli_error($conn_aktif));
+	$sql_simpan_red=$conn_aktif->query("insert into m_kamus(redaksi,unit_kode,user_id,tgl_add,flag) values('$aktif_judul','$aktif_unitkerja','$user_id','$waktu_lokal','$aktif_status')") or die(mysqli_error($conn_aktif));
 	$status_input=array("error"=>false);
 	if ($sql_simpan_red) {
 		$status_input["error"]=false;
@@ -85,17 +85,17 @@ function search_id_m_kamus($redaksi,$unit_kode,$user_id) {
 	return $status_input;
 	$conn_aktif->close();
 }
-function delete_aktfivitas_harian($aktif_id) {
+function delete_aktivitas_harian($aktif_id) {
 	$db_aktif = new db();
 	$conn_aktif = $db_aktif -> connect();
-	$sql_delete_aktivitas=$conn_aktif->query("select * from aktivitas where aktif_id='$aktif_id' ") or die(mysqli_error($conn_aktif));
+	$sql_delete_aktivitas=$conn_aktif->query("select aktivitas.*, m_kamus.redaksi, unitkerja.nama as unitnama from aktivitas inner join unitkerja on aktivitas.unit_kode=unitkerja.kode inner join m_kamus on aktivitas.m_id=m_kamus.id where aktivitas.id='$aktif_id'") or die(mysqli_error($conn_aktif));
 	$status_input=array("error"=>false);
 	$cek=$sql_delete_aktivitas->num_rows;
 	if ($cek>0) {
 		$status_input["error"]=false;
 		$r=$sql_delete_aktivitas->fetch_object();
-		$sql_hapus=$conn_aktif->query("delete from aktivitas where aktif_id='$aktif_id'") or die(mysqli_error($conn_aktif));
-		$status_input["pesan_error"]='(SUKSES) Data kegiatan <strong>'.$r->m_redaksi.'</strong> dari Jam '.date("H:i",strtotime($r->aktif_awal)).' s/d '.date("H:i",strtotime($r->aktif_akhir)).' sudah dihapus';
+		$sql_hapus=$conn_aktif->query("delete from aktivitas where id='$aktif_id'") or die(mysqli_error($conn_aktif));
+		$status_input["pesan_error"]='(SUKSES) Data kegiatan <strong>'.$r->redaksi.'</strong> dari Jam '.date("H:i",strtotime($r->jam_start)).' s/d '.date("H:i",strtotime($r->jam_end)).' sudah dihapus';
 	}
 	else {
 		$status_input["error"]=true;
@@ -104,12 +104,24 @@ function delete_aktfivitas_harian($aktif_id) {
 	return $status_input;
 	$conn_aktif->close();
 }
-function update_aktivitas_harian($aktif_id,$m_id,$redaksi,$peg_id,$tgl_aktif,$jam_awal,$jam_akhir,$target,$satuan,$aktif_unitkerja,$aktif_status) {
+function update_aktivitas_harian($aktif_id,$aktif_nama_kegiatan,$user_id,$aktif_tanggal,$aktif_mulai,$aktif_selesai,$aktif_target,$aktif_satuan,$aktif_unitkerja) {
+	$waktu_lokal=date("Y-m-d H:i:s");
 	$db_aktif = new db();
 	$conn_aktif = $db_aktif -> connect();
-
-	$r_m_update=update_m_aktivitas($m_id,$redaksi,$aktif_unitkerja,$peg_id,1);
-	$sql_update_aktivitas=$conn_aktif->query("update aktivitas set m_redaksi='$redaksi', peg_id='$peg_id', aktif_unitkerja='$aktif_unitkerja', aktif_target='$target', aktif_status='$satuan', aktif_awal='$jam_awal', aktif_akhir='$jam_akhir', aktif_status='$aktif_status' where aktif_id='$aktif_id' ") or die(mysqli_error($conn_aktif));
+	//cek dulu redaksi sebelum dan setelah edit
+	$r_cari=search_id_m_kamus($aktif_nama_kegiatan,$aktif_unitkerja,$user_id);
+	if ($r_cari["error"]==false) {
+		//master aktivitas sudah ada
+		$m_id=$r_cari["id"];
+	}
+	else {
+		$r_save_m_aktivitas=save_m_kamus($aktif_nama_kegiatan,$aktif_unitkerja,$user_id,1);
+		$r_cari_baru=search_id_m_kamus($aktif_nama_kegiatan,$aktif_unitkerja,$user_id);
+		$m_id=$r_cari_baru["id"];
+	}
+	//eksekusi update data aktivitas
+	//aktivitas(m_id,user_id,unit_kode,tanggal,target,satuan,tgl_add,jam_start,jam_end,update_oleh,flag)
+	$sql_update_aktivitas=$conn_aktif->query("update aktivitas set m_id='$m_id', user_id='$user_id', unit_kode='$aktif_unitkerja', target='$aktif_target', satuan='$aktif_satuan', jam_start='$aktif_mulai', jam_end='$aktif_selesai', tgl_update='$waktu_lokal', update_oleh='$user_id' where id='$aktif_id' ") or die(mysqli_error($conn_aktif));
 	$status_input=array("error"=>false);
 	if ($sql_update_aktivitas) {
 		$status_input["error"]=false;
@@ -144,7 +156,7 @@ function save_aktivitas_harian($redaksi,$user_id,$tgl_aktif,$jam_awal,$jam_akhir
 	}
 	
 	
-	$sql_input_aktivitas=$conn_aktif->query("insert into aktivitas(m_id,user_id,unit_kode,tanggal,target,satuan,tgl_add,jam_start,jam_end,update_oleh,flag) values('$m_id','$user_id','$aktif_unitkerja','$tgl_aktif','$target','$satuan','$waktu_lokal','$jam_awal','$jam_akhir','$user_id','1')") or die(mysqli_error($conn_aktif));
+	$sql_input_aktivitas=$conn_aktif->query("insert into aktivitas(m_id,user_id,unit_kode,tanggal,target,satuan,tgl_add,jam_start,jam_end,flag) values('$m_id','$user_id','$aktif_unitkerja','$tgl_aktif','$target','$satuan','$waktu_lokal','$jam_awal','$jam_akhir','1')") or die(mysqli_error($conn_aktif));
 	$status_input=array("error"=>false);
 	if ($sql_input_aktivitas) {
 		$status_input["error"]=false;
@@ -255,30 +267,59 @@ function list_aktivitas_harian($id,$tgl_aktif,$detil=false,$user_id) {
 	}
 	else {
 		$r_data["error"]=true;
-		$r_data["pesan_error"]="Data tidak tersedia";
+		$r_data["pesan_error"]="Belum ada aktivitas harian";
 
 	}
 	return $r_data;
 	$conn_aktif -> close();
 }
-function list_m_kamus($id,$detil=false,$unit=false) {
+function flag_m_kamus($flag_kode,$m_id) {
+	$db_aktif = new db();
+	$conn_aktif = $db_aktif -> connect();
+	if ($flag_kode==0) {
+		$flag_kode_new=1;
+	}
+	else {
+		$flag_kode_new=0;
+	}
+	$sql_update_flag_kamus=$conn_aktif->query("update m_kamus set flag='$flag_kode_new' where id='$m_id'") or die(mysqli_error($conn_aktif));
+	$status_input=array("error"=>false);
+	if ($sql_update_flag_kamus) {
+		$status_input["error"]=false;
+		$status_input["pesan_error"]='(SUKSES) Flag kamus berhasil di ubah';
+	}
+	else {
+		$status_input["error"]=true;
+		$status_input["pesan_error"]='(ERROR) flag kamus tidak dapat di ubah';
+	}
+	return $status_input;
+	$conn_aktif->close();
+}
+function list_m_kamus($id,$detil=false,$unit=false,$flag=false) {
 	$unit_kode=$_SESSION['papo_unitkerja'];
 	$db_aktif = new db();
 	$conn_aktif = $db_aktif -> connect();
+	
 	if ($detil==false) {
 		if ($unit==false) {
 			//list semua master kegiatan
 			//list semua redaksi
-			$sql_list_redaksi = $conn_aktif -> query("select m_kamus.*, unitkerja.nama as unitnama, unitkerja.jenis, users.nama as user_nama from m_kamus inner join unitkerja on m_kamus.unit_kode=unitkerja.kode inner join users on users.id=m_kamus.user_id order by m_kamus.id asc") or die(mysqli_error($conn_aktif));
+			if ($flag==false) { $m_flag=''; }
+			else { $m_flag='where m_kamus.flag=1';	}
+			$sql_list_redaksi = $conn_aktif -> query("select m_kamus.*, unitkerja.nama as unitnama, unitkerja.jenis, users.nama as user_nama from m_kamus inner join unitkerja on m_kamus.unit_kode=unitkerja.kode inner join users on users.id=m_kamus.user_id $m_flag order by m_kamus.id asc") or die(mysqli_error($conn_aktif));
 		}
 		else {
 			//list master kegiatan di unitkerjanya
-			$sql_list_redaksi = $conn_aktif -> query("select m_kamus.*, unitkerja.nama as unitnama, unitkerja.jenis, users.nama as user_nama from m_kamus inner join unitkerja on m_kamus.unit_kode=unitkerja.kode inner join users on users.id=m_kamus.user_id where m_kamus.unit_kode='$unit_kode' order by id asc") or die(mysqli_error($conn_aktif));
+			if ($flag==false) { $m_flag=''; }
+			else { $m_flag='and m_kamus.flag=1';	}
+			$sql_list_redaksi = $conn_aktif -> query("select m_kamus.*, unitkerja.nama as unitnama, unitkerja.jenis, users.nama as user_nama from m_kamus inner join unitkerja on m_kamus.unit_kode=unitkerja.kode inner join users on users.id=m_kamus.user_id where m_kamus.unit_kode='$unit_kode' $m_flag order by id asc") or die(mysqli_error($conn_aktif));
 		}
 	}
 	else {
 		//pilih 1 redaksi sesuai id nya
-		$sql_list_redaksi = $conn_aktif -> query("select m_kamus.*, unitkerja.nama as unitnama, unitkerja.jenis, users.nama as user_nama from m_kamus inner join unitkerja on m_kamus.unit_kode=unitkerja.kode inner join users on users.id=m_kamus.user_id where m_kamus.id='$id'") or die(mysqli_error($conn_aktif));
+		if ($flag==false) { $m_flag=''; }
+		else { $m_flag='and m_kamus.flag=1';	}
+		$sql_list_redaksi = $conn_aktif -> query("select m_kamus.*, unitkerja.nama as unitnama, unitkerja.jenis, users.nama as user_nama from m_kamus inner join unitkerja on m_kamus.unit_kode=unitkerja.kode inner join users on users.id=m_kamus.user_id where m_kamus.id='$id' $m_flag") or die(mysqli_error($conn_aktif));
 	}
 	$r_data=array("error"=>false);
 	$cek = $sql_list_redaksi->num_rows;

@@ -6,7 +6,7 @@
 		<a href="<?php echo $url; ?>">Depan</a>
 	</li>
 	<li class="active">
-		<strong>Aktivitas</strong>
+		<strong>Master Aktivitas</strong>
 	</li>
 	</ol>
 	</div>
@@ -49,7 +49,7 @@
                     <tbody>
                     <?php 
                        
-                        $r_aktif=list_m_kamus(0,false,false);
+                        $r_aktif=list_m_kamus(0,false,false,false);
 
                         if ($r_aktif["error"]==false) {
                             $i=1;
@@ -64,7 +64,7 @@
                                 <td>'.$r_aktif["item"][$i]["m_namauser"].'</td>                               
                                 <td>'.$r_aktif["item"][$i]["m_tgl_add"].'</td>  
                                 <td>'.$status_umum[$r_aktif["item"][$i]["m_flag"]].'</td>
-                                <td><a href="'.$url.'/'.$page.'/'.$act.'/delete/'.$r_aktif["item"][$i]["m_id"].'" data-confirm="Apakah data ('.$r_aktif["item"][$i]["m_id"].') '.$r_aktif["item"][$i]["m_redaksi"].' ini akan di hapus?"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
+                                <td><div class="tooltip-bps"><a href="'.$url.'/'.$page.'/flag/'.$r_aktif["item"][$i]["m_flag"].'/'.$r_aktif["item"][$i]["m_id"].'" data-confirm="Apakah data ('.$r_aktif["item"][$i]["m_id"].') '.$r_aktif["item"][$i]["m_redaksi"].' ini akan di ubah flagnya?" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Ubah Flag '.$r_aktif["item"][$i]["m_redaksi"].'" ><i class="fa fa-flag" aria-hidden="true"></i></a></div></td>
 
                                 </tr>';
 

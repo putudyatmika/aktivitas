@@ -69,14 +69,15 @@ else { $thn_pilih=date("Y"); }
                         </form>
                    
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover" >
+                            <table class="table table-striped table-hover TabelAktivitasHarian">
                             <thead>
                             <tr>
+                                <th>Tanggal</th>
+                                <th>Hari</th>
                                 <th width="15%">Waktu</th>
                                 <th>Kegiatan</th>
                                 <th>Target</th>
-                                <th>Tanggal Add</th>
-                                <th>Tanggal Update</th>
+                                <th>Tanggal Save</th>
                                 <th>&nbsp;</th>
                             </tr>
                             </thead>
@@ -94,20 +95,44 @@ else { $thn_pilih=date("Y"); }
                                     $tm = 86400 * $j; // 60 * 60 * 24 = 86400 = 1 day in seconds
                                     $tm = $timestamp - $tm;
                                     $tgl_dipilih=date("Y-m-d", $tm);
-                                    echo  '<tr><td colspan="6"><strong>'.tgl_convert(1,$tgl_dipilih).'</strong></td></tr>';
-                                    
+                                    /*
+                                    echo  ' <tr>
+                                                <td><strong>'.tgl_convert(1,$tgl_dipilih).'</strong></td>
+                                                ';
+                                    */
+                                    //cek hari kerja apa ngga
+                                    $h_libur=cek_hari_kerja($tgl_dipilih);
+                                    if ($h_libur==true) {
+                                        //hari sabtu minggu
+                                        $label_hari_ini='<span class="badge badge-danger">'.hari_tanggal($tgl_dipilih).'</span>';
+                                        $label_tglhari_ini='<span class="badge badge-danger">'.tanggal_pendek(1,$tgl_dipilih).'</span>';
+                                    }
+                                    else {
+                                        $label_hari_ini='<span class="badge badge-success">'.hari_tanggal($tgl_dipilih).'</span>';
+                                        $label_tglhari_ini='<span class="badge badge-primary">'.tanggal_pendek(1,$tgl_dipilih).'</span>';
+                                    }
+                                    echo  ' <tr>
+                                                <td>'.$label_tglhari_ini.'</td>
+                                                <td>'.$label_hari_ini.'</td>
+                                                ';
                             //cek tgl hari dulu
                                     if (cek_hari_kerja($tgl_dipilih)==true) {
-                                         echo '<tr>
-                                                <td colspan="6"><span class="label label-primary">Hari Libur</span></td>
+                                         echo '<td><span class="badge badge-primary">Hari Libur</span></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 </tr>';
                                     }
                                     else {
                                         //cek lagi apakah hari besar apa tidak
                                         $r_libur=cek_hari_libur($tgl_dipilih);
                                         if ($r_libur["error"]==false) {
-                                            echo '<tr>
-                                                <td colspan="6"><span class="label label-success">'.$r_libur["libur_ket"].'</span></td>
+                                            echo '<td><span class="badge badge-warning">'.$r_libur["libur_ket"].'</span></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 </tr>';
                                         }
                                         else {
@@ -115,21 +140,37 @@ else { $thn_pilih=date("Y"); }
                                             if ($r_list["error"]==false) {
                                                 $max_data=$r_list["aktif_total"];
                                                 for ($i=1;$i<=$max_data;$i++) {
+                                                    if ($i==1) {
                                                     echo '
-                                                        <tr>
                                                             <td>'.date("H:i",strtotime($r_list["item"][$i]["jam_start"])).' - '.date("H:i",strtotime($r_list["item"][$i]["jam_end"])).'</td>
                                                             <td>'.$r_list["item"][$i]["redaksi"].'</td>
                                                             <td>'.$r_list["item"][$i]["target"].' '.$r_list["item"][$i]["satuan"].'</td>
                                                             <td>'.tgl_convert_waktu_pendek(1,$r_list["item"][$i]["tgl_add"]).'</td>
-                                                            <td>'.tgl_convert_waktu_pendek(1,$r_list["item"][$i]["tgl_update"]).'</td>
-                                                            <td><a href="'.$url.'/edit/'.$r_list["item"][$i]["id"].'"><i class="fa fa-pencil-square text-info" aria-hidden="true"></i></a> <a href="'.$url.'/'.$page.'/delete/'.$r_list["item"][$i]["id"].'" data-confirm="Apakah data ('.$r_list["item"][$i]["id"].') '.$r_list["item"][$i]["redaksi"].' ini akan di hapus?"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
+                                                            <td><div class="tooltip-bps"><a href="'.$url.'/edit/'.$r_list["item"][$i]["id"].'" class="btn btn-info btn-rounded btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Kegiatan : '.$r_list["item"][$i]["redaksi"].'"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a href="'.$url.'/hapus/'.$r_list["item"][$i]["id"].'" data-confirm="Apakah data ('.$r_list["item"][$i]["id"].') '.$r_list["item"][$i]["redaksi"].' ini akan di hapus?" class="btn btn-danger btn-rounded btn-xs" data-toggle="tooltip" data-placement="top" title="Hapus Kegiatan : '.$r_list["item"][$i]["redaksi"].'"><i class="fa fa-trash" aria-hidden="true"></i></a></div></td>
                                                         </tr>
                                                     ';
+                                                    }
+                                                    else {
+                                                        echo '<tr>
+                                                            <td>'.$label_tglhari_ini.'</td>
+                                                            <td>'.$label_hari_ini.'</td>
+                                                            <td>'.date("H:i",strtotime($r_list["item"][$i]["jam_start"])).' - '.date("H:i",strtotime($r_list["item"][$i]["jam_end"])).'</td>
+                                                            <td>'.$r_list["item"][$i]["redaksi"].'</td>
+                                                            <td>'.$r_list["item"][$i]["target"].' '.$r_list["item"][$i]["satuan"].'</td>
+                                                            <td>'.tgl_convert_waktu_pendek(1,$r_list["item"][$i]["tgl_add"]).'</td>
+                                                            <td><div class="tooltip-bps"><a href="'.$url.'/edit/'.$r_list["item"][$i]["id"].'" class="btn btn-info btn-rounded btn-xs" data-toggle="tooltip" data-placement="top" title="Edit Kegiatan : '.$r_list["item"][$i]["redaksi"].'"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a href="'.$url.'/hapus/'.$r_list["item"][$i]["id"].'" data-confirm="Apakah data ('.$r_list["item"][$i]["id"].') '.$r_list["item"][$i]["redaksi"].' ini akan di hapus?" class="btn btn-danger btn-rounded btn-xs" data-toggle="tooltip" data-placement="top" title="Hapus Kegiatan : '.$r_list["item"][$i]["redaksi"].'"><i class="fa fa-trash" aria-hidden="true"></i></a></div></td>
+                                                        </tr>
+                                                    ';
+                                                    }
                                                 }
                                             }
                                             else {
-                                                echo '<tr>
-                                                <td colspan="6"><span class="label label-danger">'.$r_list["pesan_error"].'</span></td>
+                                                echo '
+                                                <td><span class="badge badge-danger">'.$r_list["pesan_error"].'</span></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 </tr>';
                                                 }
                                         }
@@ -137,6 +178,17 @@ else { $thn_pilih=date("Y"); }
                             }
                             ?>   
                             </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Hari</th>
+                                <th width="15%">Waktu</th>
+                                <th>Kegiatan</th>
+                                <th>Target</th>
+                                <th>Tanggal Save</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                            </tfoot>
                             </table>
                         </div>
 

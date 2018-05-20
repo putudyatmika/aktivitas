@@ -2,8 +2,8 @@
 if ($act=="add") {
 
 }
-elseif ($act=="edit") {
-
+elseif ($act=="flag") {
+    include 'views/kamus/kamus_flag.php';
 }
 else {
     include 'views/kamus/kamus_list.php';

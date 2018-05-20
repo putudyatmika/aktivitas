@@ -104,6 +104,7 @@
                         </div>
                         <input type="hidden" name="aktif_id" value="<?php echo $aktif_id;?>" />
                         <input type="hidden" name="m_id" value="<?php echo $r_keg["item"][1]["m_id"];?>" />
+                        <input type="hidden" name="m_redaksi" value="<?php echo $r_keg["item"][1]["redaksi"];?>" />
                         <input type="hidden" name="aktif_tanggal" value="<?php echo $r_keg["item"][1]["tanggal"]; ?>" />
                 </fieldset>
                 </form>
@@ -151,7 +152,7 @@
                                     <td>'.date("H:i",strtotime($r_list["item"][$i]["jam_start"])).' - '.date("H:i",strtotime($r_list["item"][$i]["jam_end"])).'</td>
                                     <td>'.$r_list["item"][$i]["redaksi"].'</td>
                                     <td>'.$r_list["item"][$i]["target"].' '.$r_list["item"][$i]["satuan"].'</td>
-                                    <td><a href="'.$url.'/edit/'.$r_list["item"][$i]["id"].'"><i class="fa fa-pencil-square text-info" aria-hidden="true"></i></a> <a href="'.$url.'/delete/'.$r_list["item"][$i]["id"].'" data-confirm="Apakah data ('.$r_list["item"][$i]["id"].') '.$r_list["item"][$i]["redaksi"].' ini akan di hapus?"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
+                                    <td><a href="'.$url.'/edit/'.$r_list["item"][$i]["id"].'"><i class="fa fa-pencil-square text-info" aria-hidden="true"></i></a> <a href="'.$url.'/hapus/'.$r_list["item"][$i]["id"].'" data-confirm="Apakah data ('.$r_list["item"][$i]["id"].') '.$r_list["item"][$i]["redaksi"].' ini akan di hapus?"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
                                 </tr>
                             ';
                         }
