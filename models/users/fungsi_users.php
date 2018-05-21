@@ -55,7 +55,7 @@ function cek_users_login($user_id,$user_passwd) {
 		if ($r->aktif==1) {
 			//berhasil login dan aktif
 			$sql_update_login=$conn -> query("update users set ip_lastlogin='$ip', tgl_lastlogin='$waktu_lokal' where username='$user_id'");
-			$sql_user_detil=$conn-> query("select users.id, username, users.nama, users.passwd, users.email, users.unitkerja, peg_status, peg_jabatan, level, aktif, unitkerja.nama as unitnama from users inner join unitkerja on users.unitkerja=unitkerja.kode where username='$user_id' and passwd='$pass_md5'") or die(mysqli_error($conn));
+			$sql_user_detil=$conn-> query("select users.id, username, users.nama, users.passwd, users.email, users.unitkerja, peg_status, peg_jabatan, level, aktif, unitkerja.nama as unitnama, unitkerja.eselon from users inner join unitkerja on users.unitkerja=unitkerja.kode where username='$user_id' and passwd='$pass_md5'") or die(mysqli_error($conn));
 			$r=$sql_user_detil->fetch_object();
 			$r_login["error"]=false;
 			
@@ -71,6 +71,7 @@ function cek_users_login($user_id,$user_passwd) {
 			$r_login["user_status"]=$r->peg_status;
 			$r_login["user_aktif"]=$r->aktif;
 			$r_login["user_unitnama"]=$r->unitnama;
+			$r_login["user_eselon"]=$r->eselon;
 			$r_login["pesan_error"]="Selamat Datang <b>".$r->nama."</b>";
 		}
 		else {
@@ -257,6 +258,56 @@ function list_users($user_id,$detil=false) {
 				"email"=>$r->email,
 				"unit_kode"=>$r->unitkerja,
 				"unit_nama"=>$r->unitnama,
+				"nohp"=>$r->nohp,
+				"peg_status"=>$r->peg_status,
+				"peg_jabatan"=>$r->peg_jabatan,
+				"tgl_add"=>$r->tgl_add,
+				"add_oleh"=>$r->add_oleh,
+				"tgl_update"=>$r->tgl_update,
+				"update_oleh"=>$r->update_oleh,
+				"ip_lastlogin"=>$r->ip_lastlogin,
+				"tgl_lastlogin"=>$r->tgl_lastlogin,
+				"level"=>$r->level,
+				"aktif"=>$r->aktif
+			);
+			$i++;
+		}
+	}
+	else {
+		$users_list["error"]=true;
+		$users_list["pesan_error"]="Data user tidak tersedia";
+	}
+	return $users_list;
+	$conn_users->close();
+}
+function list_users_bawahan($unit_kode,$eselonIV=false) {
+	$db_users = new db();
+	$conn_users = $db_users -> connect();
+	if ($eselonIV==true) {
+		//kepala seksi
+		$sql_users = $conn_users -> query("select * from users inner join (select kode as unit_kode, nama as unit_nama, parent as unit_parent, eselon as unit_eselon  from unitkerja where unitkerja.kode='$unit_kode') as u on users.unitkerja=u.unit_kode where users.peg_jabatan=2 and users.peg_status=1 order by users.id asc") or die(mysqli_error($conn_users));
+	}
+	else {
+		//kabid / kepala bps provinsi
+		$sql_users = $conn_users -> query("select * from users inner join (select kode as unit_kode, nama as unit_nama, parent as unit_parent, eselon as unit_eselon from unitkerja where unitkerja.parent='$unit_kode') as u on users.unitkerja=u.unit_kode where users.peg_status=1 order by users.unitkerja, users.peg_jabatan asc") or die(mysqli_error($conn_users)) ;
+	}
+	$cek_users = $sql_users->num_rows;
+	$users_list=array("error"=>false);
+	if ($cek_users>0) {
+		$users_list["error"]=false;
+		$users_list["user_total"]=$cek_users;
+		$i=1;
+		while ($r=$sql_users->fetch_object()) {
+			$users_list["item"][$i]=array(
+				"id"=>$r->id,
+				"username"=>$r->username,
+				"passwd"=>$r->passwd,
+				"nama"=>$r->nama,
+				"email"=>$r->email,
+				"unit_kode"=>$r->unit_kode,
+				"unit_nama"=>$r->unit_nama,
+				"unit_parent"=>$r->unit_parent,
+				"unit_eselon"=>$r->unit_eselon,
 				"nohp"=>$r->nohp,
 				"peg_status"=>$r->peg_status,
 				"peg_jabatan"=>$r->peg_jabatan,
