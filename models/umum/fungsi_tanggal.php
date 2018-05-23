@@ -58,6 +58,15 @@ function tgl_convert_bln($bahasa,$tgl) { //Sel, 12 Jan 2016
 	}
 	return $tanggalan;
 }
+function bln_thn_pendek($tgl) { // 23 Mei
+	global $tanggalan,$nama_hari_eng_indo_pendek,$nama_bulan_pendek;
+	$tahun=date("Y",strtotime($tgl));
+	$hari=date("l",strtotime($tgl));
+	$tgl_=date("j",strtotime($tgl));
+	$bulan=date("n",strtotime($tgl));
+	$tanggalan="$tgl_ $nama_bulan_pendek[$bulan]";
+	return $tanggalan;
+}
 function tgl_convert_waktu($bahasa,$tgl) {
 	//format tahun-bulan-tgl hh:mm:ss
 	global $tanggalan,$nama_hari_eng_indo,$nama_bulan_panjang;

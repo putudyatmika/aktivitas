@@ -32,6 +32,9 @@ elseif ($page=="datapegawai") {
 elseif ($page=="datausers") {
     include 'views/users/m_users.php';
 }
+elseif ($page=="profile") {
+    include 'views/profil/m_profil.php';
+}
 elseif ($page=="harian") {
     include 'views/harian/aktif_harian.php';
 }
