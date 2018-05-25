@@ -48,6 +48,15 @@ $r_user=list_users($user_id,true);
                                  </div>
                                 </div>
                         </div>
+                        <div class="form-group">
+                            <label for="absen_id" class="col-sm-2 control-label">Absen ID</label>
+                                <div class="col-lg-4 col-sm-4">
+                                    <div class="input-group margin-bottom-sm">
+                                <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
+                                    <input type="text" name="absen_id" class="form-control" placeholder="Masukkan Absen ID" value="<?php echo $r_user["item"][1]["absen_id"]; ?>" />
+                                 </div>
+                                </div>
+                        </div>
                     <div class="form-group">
                       <label for="user_nama" class="col-sm-2 control-label">Nama</label>
                         <div class="col-lg-4 col-sm-4">

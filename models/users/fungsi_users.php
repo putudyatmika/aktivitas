@@ -39,6 +39,39 @@ function gen_passwd($passwd_ori) {
 	$passwd_md5=md5($pengacak.'('.$passwd_ori.')'.$pengacak);
   return $passwd_md5;
 }
+function ganti_password($passwd_lama,$passwd_baru) {
+	global $ip;
+	$db = new db();
+	$conn = $db->connect();
+	$user_id=$_SESSION['papo_userid'];
+	$passwd_lama_md5=gen_passwd($passwd_lama);
+	$passwd_baru_md5=gen_passwd($passwd_baru);
+
+	$sql_cek = $conn -> query("select * from users where id='$user_id' and passwd='$passwd_lama_md5'");
+	$cek=$sql_cek->num_rows;
+	$r_ganti=array("error"=>false);
+	if ($cek>0) {
+		$waktu_lokal=date("Y-m-d H:i:s");
+		$sql_update_passwd=$conn -> query("update users set ip_lastlogin='$ip', tgl_lastlogin='$waktu_lokal', passwd='$passwd_baru_md5' where id='$user_id'") or die(mysqli_error($conn));
+		if ($sql_update_passwd) {
+			$r_ganti["error"]=false;
+			$r_ganti["pesan_error"]="Password berhasil diubah";
+			$_SESSION['papo_passwd_md5']=$passwd_baru_md5;
+			$_SESSION['papo_passwd_ori']=$passwd_baru;
+		}
+		else {
+			$r_ganti["error"]=true;
+			$r_ganti["pesan_error"]="Password tidak berhasil diubah";
+		}
+		
+	}
+	else {
+		$r_ganti["error"]=true;
+		$r_ganti["pesan_error"]="Password lama salah!";
+	}
+	return $r_ganti;
+	$db->close();
+}
 
 function cek_users_login($user_id,$user_passwd) {
 	global $ip;
@@ -144,7 +177,7 @@ function cek_user_no($user_no) {
 	return $r_login;
 	$db->close();
 }
-function update_username($user_id,$username,$user_nama,$user_nohp,$user_email,$pass_md5,$user_unitkerja,$peg_jabatan,$user_status,$user_level) {
+function update_username($user_id,$absen_id,$username,$user_nama,$user_nohp,$user_email,$pass_md5,$user_unitkerja,$peg_jabatan,$user_status,$user_level) {
 	$waktu_lokal=date("Y-m-d H:i:s");
     $created=$_SESSION['papo_userid'];
 	if ($peg_jabatan==3) { $peg_status=2; }
@@ -160,16 +193,54 @@ function update_username($user_id,$username,$user_nama,$user_nohp,$user_email,$p
 		$r_update["error"]=false;
 		//update sql
 		if ($pass_md5=='') {
-			$sql_save_user = $conn_users -> query("update users set username='$username',nama='$user_nama',email='$user_email',unitkerja='$user_unitkerja', nohp=$user_nohp,peg_status='$peg_status',peg_jabatan='$peg_jabatan',update_oleh='$created',tgl_update='$waktu_lokal',level='$user_level',aktif='$user_status' where id='$user_id'") or die(mysqli_error($conn_users));
+			$sql_save_user = $conn_users -> query("update users set username='$username', absen_id='$absen_id', nama='$user_nama',email='$user_email',unitkerja='$user_unitkerja', nohp=$user_nohp,peg_status='$peg_status',peg_jabatan='$peg_jabatan',update_oleh='$created',tgl_update='$waktu_lokal',level='$user_level',aktif='$user_status' where id='$user_id'") or die(mysqli_error($conn_users));
 		}
 		else {
-			$sql_save_user = $conn_users -> query("update users set username='$username',nama='$user_nama',email='$user_email',unitkerja='$user_unitkerja',nohp=$user_nohp,peg_status='$peg_status',peg_jabatan='$peg_jabatan',update_oleh='$created',tgl_update='$waktu_lokal',level='$user_level',aktif='$user_status',user_passwd='$pass_md5' where id='$user_id'") or die(mysqli_error($conn_users));
+			$sql_save_user = $conn_users -> query("update users set username='$username', absen_id='$absen_id', nama='$user_nama',email='$user_email',unitkerja='$user_unitkerja',nohp=$user_nohp,peg_status='$peg_status',peg_jabatan='$peg_jabatan',update_oleh='$created',tgl_update='$waktu_lokal',level='$user_level',aktif='$user_status',passwd='$pass_md5' where id='$user_id'") or die(mysqli_error($conn_users));
 		}
 		
 		if ($sql_save_user) {
 			//berhasil di update
 			$r_update["error"]=false;
 			$r_update["pesan_error"]='<div class="alert alert-success"><strong>(SUCCESS)</strong> : berhasil untuk melakukan update</div>';
+		}
+		else {
+			//error di update
+			$r_update["error"]=true;
+			$r_update["pesan_error"]='<div class="alert alert-danger"><strong>(ERROR)</strong : Gagal untuk melakukan update</div>';
+		}
+	}
+	else {
+		//error user tidak ada
+		$r_update["error"]=true;
+		$r_update["pesan_error"]='<div class="alert alert-success"><strong>(ERROR)</strong : User ID:  '.$user_id.' tidak tersedia</div>';
+	}
+	return $r_update;
+	$conn_users->close();
+}
+function update_profile($user_id,$username,$user_nama,$user_nohp,$user_email) {
+	$waktu_lokal=date("Y-m-d H:i:s");
+    $created=$_SESSION['papo_userid'];
+	
+	$user_nohp = !empty($user_nohp) ? "'$user_nohp'" : "NULL";
+
+	$db_users = new db();
+	$conn_users = $db_users -> connect();
+	$sql_cek_user = $conn_users -> query("select * from users where id='$user_id'") or die(mysqli_error($conn_users));
+	$cek = $sql_cek_user -> num_rows;
+	$r_update = array("error"=>false);
+	if ($cek>0) {
+		$r_update["error"]=false;
+		//update sql
+		$sql_save_user = $conn_users -> query("update users set username='$username', nama='$user_nama', email='$user_email',nohp=$user_nohp,update_oleh='$created',tgl_update='$waktu_lokal' where id='$user_id'") or die(mysqli_error($conn_users));
+		
+		if ($sql_save_user) {
+			//berhasil di update
+			$r_update["error"]=false;
+			$r_update["pesan_error"]='<div class="alert alert-success"><strong>(SUCCESS)</strong> : berhasil untuk melakukan update</div>';
+			$_SESSION['papo_username']=$username;
+			$_SESSION['papo_nama']=$user_nama;
+			$_SESSION['papo_email']=$user_email;
 		}
 		else {
 			//error di update
@@ -252,6 +323,7 @@ function list_users($user_id,$detil=false) {
 		while ($r=$sql_users->fetch_object()) {
 			$users_list["item"][$i]=array(
 				"id"=>$r->id,
+				"absen_id"=>$r->absen_id,
 				"username"=>$r->username,
 				"passwd"=>$r->passwd,
 				"nama"=>$r->nama,

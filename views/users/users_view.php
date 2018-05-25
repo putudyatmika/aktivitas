@@ -65,6 +65,8 @@
                                     <dl class="dl-horizontal">
                                         <dt>ID</dt>
                                         <dd><?php echo $r_user["item"][1]["id"];?></dd>
+                                        <dt>Absen ID</dt>
+                                        <dd><?php echo $r_user["item"][1]["absen_id"];?></dd>
                                         <dt>Username</dt>
                                         <dd><?php echo $r_user["item"][1]["username"];?></dd>
                                         <dt>Nama</dt>

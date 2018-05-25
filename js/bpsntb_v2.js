@@ -68,6 +68,41 @@ $(document).ready(function(){
      });
 });
 $(document).ready(function(){
+    $("#GantiPassword").validate({
+        rules: {
+            passwd_lama: {
+                required: true,
+                minlength: 3
+            },
+            passwd_baru: {
+                required: true,
+                minlength: 3
+            },
+            passwd_baru2: {
+                required: true,
+                minlength: 3,
+                equalTo: "#passwd_baru"
+            }
+        },
+        messages: {
+               passwd_lama: {
+                   required: "silakan isi password lama",
+                   minlength: "minimal 3 karakter"
+               },
+               passwd_baru: {
+                required: "silakan isi password baru",
+                minlength: "minimal 3 karakter"
+                },
+                passwd_baru2: {
+                   required: "silakan isi konfirmasi password baru",
+                   minlength: "minimal 3 karakter",
+                   equalTo: "silakan masukkan password yang sama dengan atas"
+               }
+           }
+
+    });
+});
+$(document).ready(function(){
      $("#formEditUser").validate({
          rules: {
              user_id: {

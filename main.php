@@ -68,9 +68,12 @@
                 <li <?php if ($page=='harian') { echo $link_aktif; } ?>>
                     <a href="<?php echo $url; ?>/harian/"><i class="fa fa-cubes"></i> <span class="nav-label">Rekap Harian</span></a>
                 </li>
-                 <li <?php if ($page=='rekappegawai') { echo $link_aktif; } ?>>
+                <?php if ($_SESSION['papo_jabatan']==1) { ?>
+                <li <?php if ($page=='rekappegawai') { echo $link_aktif; } ?>>
                     <a href="<?php echo $url; ?>/rekappegawai/"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">Rekap Pegawai</span></a>
                 </li>
+                <?php } ?>
+                <?php if ($_SESSION['papo_level']>1) { ?>
                 <li <?php if ($page=='datakamus') { echo $link_aktif; } ?>>
                 <a href="<?php echo $url; ?>/datakamus/"><i class="fa fa-asterisk"></i> <span class="nav-label">Master Aktivitas</span></a>
                 </li>
@@ -106,6 +109,19 @@
                         </li>
                     </ul>
                 </li>
+                <li <?php if ($page=='absen') { echo $link_aktif; } ?>>
+                <a href="<?php echo $url; ?>/absen/"><i class="fa fa-asterisk"></i> <span class="nav-label">Master Absen</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                        <li><a href="<?php echo $url; ?>/absen/harian/">Rekap Harian</a></li>
+                        <li><a href="<?php echo $url; ?>/absen/pola/">Pola jam kerja</a></li>
+                        <li><a href="<?php echo $url; ?>/absen/kode/">Kode Absen</a></li>
+                        <li><a href="<?php echo $url; ?>/absen/tarik/">Tarik Log</a></li>
+                        <li><a href="<?php echo $url; ?>/absen/">Log Absen</a></li>
+                        </li>
+                    </ul>
+                </li>
+                <?php } ?>
             </ul>
 
         </div>

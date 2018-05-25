@@ -47,6 +47,12 @@ elseif ($page=="logout") {
 elseif ($page=="users") {
     include 'views/users/m_users.php';
 }
+elseif ($page=="absen") {
+    include 'views/absen/m_absen.php';
+}
+elseif ($page=="gantipass") {
+    include 'views/gantipasswd/form_gantipass.php';
+}
 elseif ($page=="json") {
     include 'views/json/m_json.php';
 }
