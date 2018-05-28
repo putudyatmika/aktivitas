@@ -75,6 +75,7 @@ echo 'papo_username : '. $_SESSION['papo_username'] .'<br />'.
 'papo_level : '.$_SESSION['papo_level'].'<br />',
 'papo_unitkerja : '.$_SESSION['papo_unitkerja'].'<br />',
 'papo_unitnama : '.$_SESSION['papo_unitnama'].'<br />',
+'papo_eselon : '.$_SESSION['papo_eselon'].'<br />',
 'papo_email : '.$_SESSION['papo_email'].'<br />',
 'papo_status : '.$_SESSION['papo_status'].'<br />',
 'papo_jabatan : '.$_SESSION['papo_jabatan'].'<br />';

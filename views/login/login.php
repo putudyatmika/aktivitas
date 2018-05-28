@@ -38,6 +38,7 @@
                     $_SESSION['papo_level']=$r_log["user_level"];
                     $_SESSION['papo_unitkerja']=$r_log["user_unitkerja"]; //unit_kode
                     $_SESSION['papo_unitnama']=$r_log["user_unitnama"]; //nama unit kerja
+                    $_SESSION['papo_eselon']=$r_log["user_eselon"]; //eselon
                     $_SESSION['papo_email']=$r_log["user_email"];
                     $_SESSION['papo_status']=$r_log["user_status"];
                     $_SESSION['papo_jabatan']=$r_log["user_jabatan"];

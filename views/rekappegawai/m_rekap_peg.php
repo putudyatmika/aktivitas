@@ -14,6 +14,9 @@ elseif ($act=="update") {
 elseif ($act=="delete") {
     include 'views/rekappegawai/rekap_peg_delete.php';
 }
+elseif ($act=="view") {
+    include 'views/rekappegawai/rekap_peg_view.php';
+}
 else {
     include 'views/rekappegawai/rekap_peg_list.php';
 }

@@ -367,4 +367,87 @@ function simpan_redaksi($kata_redaksi) {
 	return $r_data;
 	$conn_aktif -> close();
 }
+function jumlah_aktivitas($bulan_skrg,$tahun_skrg) {
+	$db_keg = new db();
+	$conn_keg = $db_keg -> connect();
+	$sql_ranking_keg = $conn_keg -> query("select unitkerja.kode, unitkerja.nama, a.jumlah from unitkerja left join (select SUBSTRING(aktivitas.unit_kode,1,4) as unit_kode, COUNT(*) as jumlah from aktivitas where month(aktivitas.tanggal)='$bulan_skrg' and year(aktivitas.tanggal)='$tahun_skrg' group by unit_kode) as a on SUBSTRING(unitkerja.kode,1,4)=a.unit_kode where unitkerja.jenis='1' and unitkerja.eselon=3 group by unitkerja.kode") or die(mysqli_error($conn_keg));
+	$cek=$sql_ranking_keg->num_rows;
+	$data_aktivitas=array("error"=>false);
+	if ($cek>0) {
+		$data_aktivitas["error"]=false;
+		$data_aktivitas["aktif_total"]=$cek;
+		$i=1;
+		while ($r=$sql_ranking_keg->fetch_object()) {
+			$data_aktivitas["item"][$i]=array(
+				"unit_kode"=>$r->kode,
+				"unit_nama"=>$r->nama,
+				"unit_jumlah"=>$r->jumlah
+			);
+			$i++;
+		}
+	}
+	else {
+		$data_aktivitas["error"]=true;
+		$data_aktivitas["pesan_error"]='Data tidak tersedia';
+	}
+	return $data_aktivitas;
+	$conn_keg->close();	
+}
+function jumlah_aktivitas_bulanan($tahun_keg) {
+	$db_keg = new db();
+	$conn_keg = $db_keg -> connect();
+	$sql_tahunan = $conn_keg -> query("select m_bulan.id, m_bulan.bln_ind, m_bulan.bln_eng, b.tahun, b.jumlah from m_bulan left join (select month(tanggal) as bulan, year(tanggal) as tahun, count(*) as jumlah from aktivitas where year(tanggal)='$tahun_keg' group by bulan asc) as b on m_bulan.id=b.bulan") or die(mysqli_error($conn_keg));
+	
+	$cek=$sql_tahunan->num_rows;
+	$data_keg=array("error"=>false);
+	if ($cek>0) {
+		$data_keg["error"]=false;
+		$data_keg["aktif_total"]=$cek;
+		$i=1;
+		while ($r=$sql_tahunan->fetch_object()) {
+			$data_keg["item"][$i]=array(
+				"aktif_bulan"=>$r->id,
+				"aktif_bulan_nama"=>$r->bln_ind,
+				"aktif_tahun"=>$r->tahun,
+				"aktif_jumlah"=>$r->jumlah
+			);
+			$i++;
+		}
+	}
+	else {
+		$data_keg["error"]=true;
+		$data_keg["pesan_error"]='Data tidak tersedia';
+	}
+	return $data_keg;
+	$conn_keg->close();	
+}
+function aktivitas_perhari($tgl_aktivitas,$user_id,$uid=false) {
+	$db_keg = new db();
+	$conn_keg = $db_keg -> connect();
+	if ($uid==false) {
+		//jumlah aktivitas hari itu
+		$sql_perhari = $conn_keg -> query("select tanggal,count(*) as jumlah from aktivitas where tanggal='$tgl_aktivitas'") or die(mysqli_error($conn_keg));
+	}
+	else {
+		//jumlah aktivitas hari itu menurut user_id siapa
+		$sql_perhari = $conn_keg -> query("select tanggal,count(*) as jumlah from aktivitas where tanggal='$tgl_aktivitas' and user_id='$user_id'") or die(mysqli_error($conn_keg));
+	
+	}
+	$cek=$sql_perhari->num_rows;
+	$data_keg=array("error"=>false);
+	if ($cek>0) {
+		$data_keg["error"]=false;
+		$r=$sql_perhari->fetch_object();
+		$data_keg["tanggal"]=$tgl_aktivitas;
+		$data_keg["jumlah"]=$r->jumlah;
+	}
+	else {
+		$data_keg["error"]=true;
+		$data_keg["pesan_error"]='Data tidak tersedia';
+		$data_keg["jumlah"]=0;
+		$data_keg["tanggal"]=$tgl_aktivitas;
+	}
+	return $data_keg;
+	$conn_keg->close();	
+}
 ?>

@@ -5,11 +5,8 @@
 	<li>
 		<a href="index.php">Depan</a>
 	</li>
-	<li>
-		<a href="<?php echo $url; ?>/datausers/">Master Users</a>
-	</li>
 	<li class="active">
-        <strong>View data users</strong>
+        <strong>Profile Saya</strong>
     </li>
 	</ol>
 	</div>
@@ -19,15 +16,15 @@
 </div>
 <div class="row wrapper wrapper-content animated fadeInRight">
 	 <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>View data user</h5>
+                        <h5>Profile Saya</h5>
                         
                     </div>
                     <div class="ibox-content">
                     <?php
-                        $user_id=$lvl3;
+                        $user_id=$_SESSION["papo_userid"];
                         $r_user=list_users($user_id,true);
                         if ($r_user["error"]==false) { 
                             
@@ -63,10 +60,6 @@
                             </div>
                             <div class="alert alert-info" role="alert">
                                     <dl class="dl-horizontal">
-                                        <dt>ID</dt>
-                                        <dd><?php echo $r_user["item"][1]["id"];?></dd>
-                                        <dt>Absen ID</dt>
-                                        <dd><?php echo $r_user["item"][1]["absen_id"];?></dd>
                                         <dt>Username</dt>
                                         <dd><?php echo $r_user["item"][1]["username"];?></dd>
                                         <dt>Nama</dt>
@@ -77,6 +70,8 @@
                                         <dd><?php echo $r_user["item"][1]["nohp"];?></dd>
                                         <dt>Email</dt>
                                         <dd><?php echo $r_user["item"][1]["email"];?></dd>
+                                        <dt>Jabatan</dt>
+                                        <dd><?php echo $JenisJabatan[$r_user["item"][1]["peg_jabatan"]] .' '.$r_user["item"][1]["unit_nama"];?></dd>
                                         <dt>Last Login</dt>
                                         <dd><?php echo $lastlog_user;?></dd>
                                         <dt>Last IP</dt>
@@ -85,21 +80,13 @@
                                         <dd><?php echo $lvl_user[$r_user["item"][1]["level"]];?></dd>
                                         <dt>Status</dt>
                                         <dd><?php echo $status_umum_warna[$r_user["item"][1]["aktif"]];?></dd>
-                                        <dt>Dibuat Oleh</dt>
-                                        <dd><?php echo $nama_user_buat;?></dd>
-                                        <dt>Dibuat tanggal</dt>
-                                        <dd><?php echo tgl_convert_waktu(1,$r_user["item"][1]["tgl_add"]);?></dd>
-                                        <dt>Diupdate Oleh</dt>
-                                        <dd><?php echo $nama_user_update;?></dd>
-                                        <dt>Diupdate tanggal</dt>
-                                        <dd><?php echo $tgl_update;?></dd>
+                                        
                                     </dl>
                                     <div class="row">
                                     <div class="container">
                                     <?php
                                     echo '
-                                    <a href="'.$url.'/'.$page.'/edit/'.$user_id.'" class="btn btn-success"><i class="fa fa-pencil fa-lg"></i></a>
-                                    <a href="'.$url.'/'.$page.'/delete/'.$user_id.'" class="btn btn-danger" data-confirm="Apakah data ('.$r_user["item"][1]["username"].') '.$r_user["item"][1]["nama"].' ini akan di hapus?"><i class="fa fa-trash fa-lg"></i></a>';
+                                    <a href="'.$url.'/'.$page.'/edit/" class="btn btn-success"><i class="fa fa-pencil fa-lg"></i></a>';
                                     ?>
                                     </div>
                                     </div>

@@ -5,11 +5,8 @@
 	<li>
 		<a href="index.php">Depan</a>
 	</li>
-	<li>
-        <a href="<?php echo $url; ?>/datausers/">Master Users</a>
-    </li>
-    <li class="active">
-        <strong>Update data user</strong>
+	<li class="active">
+        <strong>Profile Saya</strong>
     </li>
 	</ol>
 	</div>
@@ -22,7 +19,7 @@
                 <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>Update data user</h5>
+                        <h5>Update data profile</h5>
                         <div class="ibox-tools">
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
@@ -33,29 +30,15 @@
                       <?php
                         if ($_POST['submit_update']) {
                             $user_id = $_POST['user_id'];
-                            $absen_id = $_POST['absen_id'];
                             $username = $_POST['username'];
                             $user_nama = $_POST['user_nama'];
                             $user_email = $_POST['user_email'];
                             $user_nohp = $_POST['user_nohp'];
-                            $user_passwd = $_POST['user_passwd'];
-                            $user_passwd2 = $_POST['user_passwd2'];
-                            $user_unitkerja = $_POST['user_unitkerja'];
-                            $peg_jabatan = $_POST['peg_jabatan'];
-                            $user_status = $_POST['user_status'];
-                            $user_level = $_POST['user_level'];
-                            //$waktu_lokal=date("Y-m-d H:i:s");
-                            if ($user_passwd=='' or $user_passwd2==''){
-                                $pass_md5='';
-                            }
-                            elseif ($user_passwd != $user_passwd2) {
-                                $pass_md5='';
-                            }
-                            else {
-                               $pass_md5=gen_passwd($user_passwd);
-                            }
                             
-                            $r_update=update_username($user_id,$absen_id,$username,$user_nama,$user_nohp,$user_email,$pass_md5,$user_unitkerja,$peg_jabatan,$user_status,$user_level);
+                            //$waktu_lokal=date("Y-m-d H:i:s");
+                            
+                            
+                            $r_update=update_profile($user_id,$username,$user_nama,$user_nohp,$user_email);
                             echo $r_update["pesan_error"];                          
                         }
                         else {

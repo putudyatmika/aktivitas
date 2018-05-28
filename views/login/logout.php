@@ -10,6 +10,7 @@
 	unset($_SESSION['papo_level']);
 	unset($_SESSION['papo_unitkerja']);
 	unset($_SESSION['papo_unitnama']);
+	unset($_SESSION['papo_eselon']);
 	unset($_SESSION['papo_email']);
 	unset($_SESSION['papo_status']);
 	unset($_SESSION['papo_jabatan']);

@@ -1,11 +1,15 @@
 <?php
-$r_tahun=jumlah_kegiatan_tahunan($tahun_keg,true);
+$r_tahun=jumlah_aktivitas_bulanan($tahun_skrg);
 if ($r_tahun["error"]==false) {
-	$total_bulan=$r_tahun["keg_bln_total"];
-	for ($i=1;$i<=$total_bulan;$i++) {
-		$data[]=$r_tahun["item"][$i]["keg_jumlah"];
-
-	}
+    $total_bulan=$r_tahun["aktif_total"];
+    for ($j=1;$j<=$total_bulan;$j++) {
+        if ($r_tahun["item"][$j]["aktif_jumlah"]=='') {
+            $data[]=0;
+        }
+        else {
+            $data[]=$r_tahun["item"][$j]["aktif_jumlah"];
+        }
+    }	
 ?>
 	<script type="text/javascript">
 $(function () {
@@ -14,7 +18,7 @@ $(function () {
         type: 'column'
     },
         title: {
-            text: 'Grafik Jumlah Kegiatan Perbulan Tahun <?php echo $tahun_keg;?>',
+            text: 'Grafik Jumlah Aktivitas Perbulan Tahun <?php echo $tahun_skrg;?>',
             x: -20 //center
         },
         subtitle: {
@@ -45,7 +49,7 @@ $(function () {
             }
         },
         series: [{
-            name: 'Jumlah Kegiatan',
+            name: 'Jumlah Aktivitas',
             data: [<?php echo join($data, ',')?>]
         }]
     });
@@ -58,4 +62,4 @@ else {
 }
 ?>
 <div id="grafiktahunan" style="min-width: 250px; min-height: 300px; margin: 0 auto"></div>
-<a href="<?php echo $url; ?>/kegiatan/" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Kegiatan Tahunan Selengkapnya"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i> Selengkapnya</a>
+<a href="<?php echo $url; ?>/harian/" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Kegiatan Tahunan Selengkapnya"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i> Selengkapnya</a>
